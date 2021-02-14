@@ -149,8 +149,21 @@ async def typing_imitate(message: events.NewMessage.Event):
     raise events.StopPropagation
 
 
+@client.on(events.NewMessage(pattern=r'^!del (.+)', outgoing=True))
+async def self_destruction(e: events.NewMessage.Event):
+    try:
+        time_destruction = int(e.text.split()[1])
+        indent = len(str(time_destruction)) + 6
+        text = e.text[indent:]
+        await e.edit(text)
+        await asyncio.sleep(time_destruction)
+        await e.delete()
+    except Exception as e:
+        print(f'self_destruction: \n{e}')
+
+
 @client.on(events.NewMessage(pattern=r'^!an.*', outgoing=True))
-async def typing_imitate(message: events.NewMessage.Event):
+async def animetion_imitate(message: events.NewMessage.Event):
     with suppress(Exception):
         for i in range(2):
             for frame in animation.frames:
