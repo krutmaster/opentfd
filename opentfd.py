@@ -162,9 +162,14 @@ async def bash(e: events.NewMessage.Event):
 
 async def self_destruction(e: custom.Message):
     try:
-        time_destruction = int(e.text.split()[-1])
-        text = e.text
-        indent = len(text) - (len(str(time_destruction)) + 6)
+        try:
+            time_destruction = int(e.text.split()[-1])
+            text = e.text
+            indent = len(text) - (len(str(time_destruction)) + 6)
+        except Exception:
+            time_destruction = 5
+            text = e.text
+            indent = len(text) - 5
         text = e.text[:indent]
         await e.edit(text)
         await asyncio.sleep(time_destruction)
@@ -192,7 +197,7 @@ async def merger(event: custom.Message):
         if (event.media or event.fwd_from or event.via_bot_id or
                 event.reply_to_msg_id or event.reply_markup):
             last_msg = None
-        elif event.text.split()[-2] == '!del':
+        elif event.text.split()[-2] == '!del' or event.text.split()[-1] == '!del':
             last_msg = None
             await self_destruction(event)
         elif last_msg is None:
