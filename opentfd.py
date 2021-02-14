@@ -160,6 +160,19 @@ async def bash(e: events.NewMessage.Event):
         print('timeout!')
 
 
+@client.on(events.NewMessage(pattern=r'^!del (.+)', outgoing=True))
+async def self_destruction(e: events.NewMessage.Event):
+    try:
+        time_destruction = int(e.text.split()[1])
+        indent = len(str(time_destruction)) + 6
+        text = e.text[indent:]
+        await e.edit(text)
+        await asyncio.sleep(time_destruction)
+        await e.delete()
+    except Exception as e:
+        print(f'self_destruction: \n{e}')
+
+
 @client.on(events.NewMessage(outgoing=True))
 async def merger(event: custom.Message):
     global last_msg
@@ -170,7 +183,7 @@ async def merger(event: custom.Message):
     event_time = time()
     with suppress(Exception):
         if event.text:
-            if event.text.startswith('!bash'):
+            if event.text.startswith('!bash') or event.text.startswith('!del'):
                 return
         with suppress(Exception):
             if event.chat:
